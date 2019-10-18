@@ -16,7 +16,7 @@ void setup() {
 
   testWire.begin(4, 5);
   testWire.setClock(100000L);
-  pcf.begin();
+  pcf.begin(0);
 
   Serial.print("\nConnecting to ");
   Serial.println(ssid);
@@ -37,14 +37,8 @@ void setup() {
 }
 
 String url;
-int count = 0;
 
 void loop() {
-
-  float temp = (analogRead(A0) * 3.3 / 1023.0 - 0.5) * 100;
-  
-  Serial.print("connecting to ");
-  Serial.println(host);
 
   WiFiClient client;
   const int httpPort = 80;
@@ -53,26 +47,26 @@ void loop() {
     return;
   }
 
-  url = "/api/led/read_all.php?id=" + String(count);
-  
-  if (count == 8)
-    url = "/api/weather/insert.php?temp=" + String(temp);
-    
-  Serial.print("Here");
-  Serial.println(++count);
-
-  Serial.print("Requesting url: ");
-  Serial.println(url);
+  url = "/api_php.php?";
 
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" +
                "Connection: close\r\n\r\n");
-  delay(500);
+  delay(1000);
 
   String section = "header";
   while (client.available())
   {
     String line = client.readStringUntil('\r');
+
+//    if (millis() % 5000 == 0)
+//    {
+//      float temp = (analogRead(A0) * 3.3 / 1023.0 - 0.5) * 100;
+//      url = "api_php.php?temp=" + String(temp);
+//      client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+//                   "Host: " + host + "\r\n" +
+//                   "Connection: close\r\n\r\n");
+//    }
 
     if (section == "header")
     {
@@ -84,30 +78,30 @@ void loop() {
       section = "ignore";
       String result = line.substring(1);
 
-      int size = result.length() + 1;
-      char json[size];
-      result.toCharArray(json, size);
-      StaticJsonBuffer<200> jsonBuffer;
+      //https://arduinojson.org/v5/assistant/ for size calculation
+      const size_t buffSize = JSON_ARRAY_SIZE(10) + 11 * JSON_OBJECT_SIZE(2);
+      char json[buffSize];
+      result.toCharArray(json, buffSize);
+
+      DynamicJsonBuffer jsonBuffer(buffSize);
       JsonObject& json_parsed = jsonBuffer.parseObject(json);
+
       if (!json_parsed.success())
       {
         Serial.println("parseObject() failed");
         return;
       }
-      String led = json_parsed["led"] [0] ["status"];
 
-      if (led == "on")
+      for (int i = 0; i < 8; i++)
       {
-        pcf.write(count, 1);
-        delay(100);
-        Serial.println("D1 is on");
-      }
-      else if (led == "off")
-      {
-        pcf.write(count, 0);
-        delay(100);
-        Serial.println("D1 is off");
+        String led = json_parsed["led"][i]["status"];
+
+        if (led == "1")
+          pcf.write(i, 1);
+        else if (led == "0")
+          pcf.write(i, 0);
       }
     }
   }
+  Serial.println(pcf.returnMask(), BIN);
 }

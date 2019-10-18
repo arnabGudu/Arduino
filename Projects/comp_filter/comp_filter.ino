@@ -29,10 +29,7 @@ void loop() {
 
   compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll;
   compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
-
-  Serial.print(compAngleX); Serial.print("\t");
-  Serial.print(compAngleY);
-
-  Serial.println();
+  
+  Serial.println(String(compAngleX) + "," + String(compAngleY));
   delay(2);
 }

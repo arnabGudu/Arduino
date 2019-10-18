@@ -1,5 +1,7 @@
 #include "I2Cdev.h"
 #include "MPU6050.h"
+#include <ros.h>
+#include <std_msgs/Empty.h>
 
 #define setPoint 0
 #define T 10
@@ -14,12 +16,14 @@ void setup() {
 
   pinmode();
   compl_filter(1);
+  ros_setup();
 
   test();
 }
 
 void loop() {
   compl_filter(0);
+  ros_loop();
   Serial.println();
   delay(2);
 }

@@ -5,18 +5,7 @@ float kp = 3.64, kd = 0, ki = 0;
 double integ = 0, lastError = 0;
 
 void pid()
-{
- /* if (Serial.available())
-  {
-    char ch = Serial.read();
-    if (ch == 'p')
-      kp = (float)analogRead(A0) / 1000;
-    else if (ch == 'i')
-      ki = (float)analogRead(A0) / 1000;
-    else if (ch == 'd')
-      kd = (float)analogRead(A0) / 1000;
-  }*/
-  
+{  
   double error = compAngleY - setPoint;
   integ += error;
   integ = constrain(integ, -255, 255);
