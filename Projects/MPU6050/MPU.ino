@@ -9,7 +9,6 @@
 #define FREQ        250
 
 int gyro_raw[3] = {0,0,0};
-float measures[3] = {0, 0, 0};
 boolean initialized;
 // MPU's temperature
 int temperature;
