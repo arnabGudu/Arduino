@@ -20,7 +20,11 @@ void loop() {
     else
       pwm_out = map(pwm[i], 900, 2000, 0, 255);
 
+    Serial.print(pwm_out);
+    Serial.print("\t");
+    
     analogWrite(aMotor[i], abs(pwm_out));
     digitalWrite(dMotor[i], directn);
   }
+  Serial.println();
 }
