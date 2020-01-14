@@ -1,13 +1,7 @@
 #include "PinChangeInterrupt.h"
-#define LAND 0
-#define WATER 1
 
 int prev_time[] = {0, 0, 0, 0, 0, 0, 0, 0};
-int pwm[] = {0, 0, 0, 0, 0, 0, 0, 0};
 bool state[] = {0, 0, 0, 0, 0, 0, 0, 0};
-byte dMotor[] = {2, 4, 7, 8, 12, 13};
-byte aMotor[] = {3, 5, 6, 9, 10, 11};
-bool mode = LAND;
 
 void ch1()
 {
@@ -63,39 +57,11 @@ void ch6()
     pwm[5] = micros() - prev_time[5];
 }
 
-void setup() {
-  Serial.begin(115200);
+void setup_PCINT() {
   attachPCINT(digitalPinToPCINT(4), ch1, CHANGE);
   attachPCINT(digitalPinToPCINT(5), ch2, CHANGE);
   attachPCINT(digitalPinToPCINT(6), ch3, CHANGE);
   attachPCINT(digitalPinToPCINT(7), ch4, CHANGE);
   attachPCINT(digitalPinToPCINT(8), ch5, CHANGE);
   attachPCINT(digitalPinToPCINT(9), ch6, CHANGE);
-}
-
-
-void loop() {
-  for (int i = 0; i < 6; i++)
-  {
-    long pwm_out;
-    bool directn;
-    if (i == 0 || i == 1 || i == 3)
-    {
-      pwm_out = map(pwm[i], 900, 2000, -255, 255);
-      directn = (pwm_out >= 0)? LOW : HIGH;
-      pwm_out = abs(pwm_out);
-    }
-    else
-      pwm_out = map(pwm[i], 900, 2000, 0, 255);
-
-    
-    analogWrite(aMotor[i], pwm_out);
-    digitalWrite(dMotor[i], directn); 
-    
-    Serial.print(pwm[i]);
-    Serial.print("\t");
-//    Serial.print(float(pwm_out) / 255 * 100);
-//    Serial.print("\t");
-  }
-  Serial.println();
 }
