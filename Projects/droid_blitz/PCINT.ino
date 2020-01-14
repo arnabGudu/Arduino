@@ -58,10 +58,10 @@ void ch6()
 }
 
 void setup_PCINT() {
-  attachPCINT(digitalPinToPCINT(4), ch1, CHANGE);
-  attachPCINT(digitalPinToPCINT(5), ch2, CHANGE);
-  attachPCINT(digitalPinToPCINT(6), ch3, CHANGE);
-  attachPCINT(digitalPinToPCINT(7), ch4, CHANGE);
-  attachPCINT(digitalPinToPCINT(8), ch5, CHANGE);
-  attachPCINT(digitalPinToPCINT(9), ch6, CHANGE);
+  attachPCINT(digitalPinToPCINT(A0), ch1, CHANGE);
+  attachPCINT(digitalPinToPCINT(A1), ch2, CHANGE);
+  attachPCINT(digitalPinToPCINT(A2), ch3, CHANGE);
+  attachPCINT(digitalPinToPCINT(A3), ch4, CHANGE);
+  attachPCINT(digitalPinToPCINT(A4), ch5, CHANGE);
+  attachPCINT(digitalPinToPCINT(A5), ch6, CHANGE);
 }

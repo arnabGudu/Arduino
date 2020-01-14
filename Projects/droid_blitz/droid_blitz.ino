@@ -22,5 +22,5 @@ void loop() {
 
     analogWrite(aMotor[i], abs(pwm_out));
     digitalWrite(dMotor[i], directn);
-  }  
+  }
 }
